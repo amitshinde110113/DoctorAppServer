@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Hospital = require('../models/hospital_modal');
 var _ = require('lodash');
-
 // Create new hospital
 exports.create = (req, res, next) => {
+    console.log('sfsdfsfsdfsdfsdfsdfdsfsdfsdfsfsdfsdfsf',req.body);
     try {
         const hospital = new Hospital({
             _id: new mongoose.Types.ObjectId(),

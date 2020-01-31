@@ -9,6 +9,7 @@ const hospitalRoute = require('./api/routes/hospital');
 
 
 const appointmentController = require('./api/models/appointment_model');
+const server=require('./server')
 
 
 // const adminRoute = require('./api/routes/admins');
@@ -43,7 +44,7 @@ app.use('/users', userRoute)
 app.use('/hospitals', hospitalRoute)
 
 
-var io = require('socket.io').listen(app.listen(3000))
+var io = require('socket.io').listen(server)
 app.get('/index', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
