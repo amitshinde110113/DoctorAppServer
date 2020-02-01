@@ -7,10 +7,17 @@ const doctorRoute = require('./api/routes/doctor');
 const userRoute = require('./api/routes/users');
 const hospitalRoute = require('./api/routes/hospital');
 
+const port = process.env.PORT || 4000;
 
 const appointmentController = require('./api/models/appointment_model');
-const server=require('./server')
+// const server=require('./server')
+// const io = require('socket.io').listen(server)
 
+const server = require('http').createServer(app)
+const io = require('socket.io').listen(server)
+// , io = io.listen(server);
+
+server.listen(port);
 
 // const adminRoute = require('./api/routes/admins');
 // const orderRoute = require('./api/routes/orders');
@@ -44,7 +51,6 @@ app.use('/users', userRoute)
 app.use('/hospitals', hospitalRoute)
 
 
-var io = require('socket.io').listen(server)
 app.get('/index', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
