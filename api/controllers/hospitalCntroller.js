@@ -3,7 +3,7 @@ const Hospital = require('../models/hospital_modal');
 var _ = require('lodash');
 // Create new hospital
 exports.create = (req, res, next) => {
-    console.log('sfsdfsfsdfsdfsdfsdfdsfsdfsdfsfsdfsdfsf',req.body);
+    console.log('sfsdfsfsdfsdfsdfsdfdsfsdfsdfsfsdfsdfsf', req.body);
     try {
         const hospital = new Hospital({
             _id: new mongoose.Types.ObjectId(),
@@ -12,7 +12,7 @@ exports.create = (req, res, next) => {
             address: req.body.address,
             contact: req.body.contact,
             regstrationNo: req.body.regstrationNo,
-            owner:req.body.owner,
+            owner: req.body.owner,
             fascilities: req.body.fascilities,
             // geoLocation: req.body.geoLocation,
             // reviews: req.body.reviews,
@@ -35,8 +35,9 @@ exports.get = (req, res, next) => {
     const id = req.params.Id;
     // console.log(id);
 
-    Hospital.find({owner:id}).populate('doctors')
+    Hospital.find({ owner: id }).populate('doctors')
         .then((hospitals) => {
+            console.log(hospitals);
             res.status(201).json(hospitals)
         })
         .catch(err => {
@@ -45,11 +46,27 @@ exports.get = (req, res, next) => {
             res.status(401).json({ error: err });
         })
 }
+// get Hospital by hospital ID
+exports.getByHospitalId = (req, res, next) => {
+    const id = req.params.Id;
+    // console.log(id);
 
+    Hospital.findOne({ _id: id })
+    // .populate('doctors')
+        .then((hospitals) => {
+            console.log(hospitals);
+            res.status(201).json(hospitals)
+        })
+        .catch(err => {
+            // console.log(err);
+
+            res.status(401).json({ error: err });
+        })
+}
 // get all hospital by pagination
 
 exports.getAll = (req, res, next) => {
-   
+
     Hospital.find().populate({ path: 'doctors' }).skip(skipReconrd).limit(limitReconrd)
         .then((hospitals) => {
             res.status(201).json(hospital)
@@ -63,12 +80,15 @@ exports.getAll = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     var data = req.body;
+    delete data['_id'];
+    console.log(data);
     var id = req.params.id;
-    Hospital.findByIdAndUpdate(id, data, { new: true }).exec()
+    Hospital.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
         .then((result) => {
             res.status(201).json(result)
         })
         .catch(err => {
+            console.log(err)
             res.status(500).json({ error: err });
         });
 }

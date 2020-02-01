@@ -16,6 +16,7 @@ const doctorSchema = mongoose.Schema({
         }
     ],
     name: String,
+    profile:String,
     address: String,
     password:String,
     contact: String,

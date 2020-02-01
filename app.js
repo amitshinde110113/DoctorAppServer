@@ -30,7 +30,6 @@ mongoose.connect('mongodb+srv://amit_shinde:amit_shinde@cluster0-ndonf.mongodb.n
     });
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");

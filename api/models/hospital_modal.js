@@ -14,6 +14,8 @@ const hospitalSchema = mongoose.Schema({
     regstrationNo: String,
     fascilities: [],
     geoLocation: String,
+    profile:String,
+    attachments:[],
     reviews: [
         {
             review: String,

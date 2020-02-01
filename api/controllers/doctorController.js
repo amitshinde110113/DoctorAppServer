@@ -42,25 +42,36 @@ exports.login = (req, res, next) => {
             }
         })
         .catch(err => {
-            res.status(404).json({message:'Not found.'});
+            res.status(404).json({ message: 'Not found.' });
         });
 }
 
-exports.getDoctors=(req,res,next)=>{
-    Doctor.find().then(result=>{
+exports.getDoctors = (req, res, next) => {
+    Doctor.find().then(result => {
         res.status(201).json(result);
-    }).catch(err=>{
+    }).catch(err => {
         res.status(401).json(err);
 
+    })
+}
+// Get doctor by id
+exports.getDoctorById = (req, res, next) => {
+    const id = req.params.id;
+    Doctor.findOne({ _id: id }).then(result => {
+        res.status(201).json(result);
+    }).catch(err => {
+        res.status(404).json(err);
     })
 }
 // Update Doctor by ID
 
 exports.update = (req, res, next) => {
     var data = req.body;
+    delete data['_id'];
     var id = req.params.id;
-    Doctor.findByIdAndUpdate(id, data, { new: true }).exec()
+    Doctor.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
         .then((result) => {
+            console.log(result)
             res.status(201).json(result);
         })
         .catch(err => {
