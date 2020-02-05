@@ -7,7 +7,7 @@ const doctorRoute = require('./api/routes/doctor');
 const userRoute = require('./api/routes/users');
 const hospitalRoute = require('./api/routes/hospital');
 
-const port =  80;
+const port = process.env.PORT || 4000;
 
 const appointmentController = require('./api/models/appointment_model');
 // const server=require('./server')
@@ -53,6 +53,10 @@ app.use('/hospitals', hospitalRoute)
 
 app.get('/index', function (req, res) {
     res.sendFile(__dirname + '/index.html');
+});
+app.get('/', function (req, res) {
+    
+   console.log('Server is listning on port',port)
 });
 
 io.on('connection', async function (socket) {
