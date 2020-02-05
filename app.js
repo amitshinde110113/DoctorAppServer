@@ -7,7 +7,7 @@ const doctorRoute = require('./api/routes/doctor');
 const userRoute = require('./api/routes/users');
 const hospitalRoute = require('./api/routes/hospital');
 
-const port = process.env.PORT || 4000;
+const port =  80;
 
 const appointmentController = require('./api/models/appointment_model');
 // const server=require('./server')
