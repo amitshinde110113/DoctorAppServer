@@ -15,6 +15,7 @@ const appointmentController = require('./api/models/appointment_model');
 
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server)
+io.set('transports',['xhr-polling',"websocket",'polling','htmlfile']);
 // , io = io.listen(server);
 
 server.listen(port);
