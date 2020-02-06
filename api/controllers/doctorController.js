@@ -67,7 +67,10 @@ exports.getDoctorById = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     var data = req.body;
-    delete data['_id'];
+    // delete data['_id'];
+    console.log(data)
+
+    // res.status(201).json(result);
     var id = req.params.id;
     Doctor.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
         .then((result) => {

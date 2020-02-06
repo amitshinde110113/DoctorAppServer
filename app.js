@@ -135,6 +135,7 @@ app.use((req, res, next) => {
     next(error);
 })
 app.use((error, req, res, next) => {
+    console.log(error)
     res.status(error.err || 500);
     res.json({ error: { message: error.message } });
 
