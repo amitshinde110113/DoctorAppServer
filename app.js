@@ -15,7 +15,7 @@ const appointmentController = require('./api/models/appointment_model');
 
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server)
-io.set('transports',['xhr-polling',"websocket",'polling','htmlfile']);
+io.set('transports', ['xhr-polling', "websocket", 'polling', 'htmlfile']);
 // , io = io.listen(server);
 
 server.listen(port);
@@ -55,8 +55,8 @@ app.get('/index', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 app.get('/', function (req, res) {
-    
-   console.log('Server is listning on port',port)
+
+    console.log('Server is listning on port', port)
 });
 
 io.on('connection', async function (socket) {
@@ -75,6 +75,7 @@ io.on('connection', async function (socket) {
     });
     socket.on('book', async (appointment) => {
         // var room = socket.request.headers.referer;
+        console.log('--------------------------------------------------', appointment)
 
 
         const ap = new appointmentController({
@@ -87,9 +88,11 @@ io.on('connection', async function (socket) {
             status: appointment.status,          // ACTIVE ARCHIVED DONE DELETED 
             type: appointment.type,            // ADVANCE CURRENT
             fees: appointment.fees,
-            isPaid: appointment.isPaid
+            isPaid: appointment.isPaid,
+            appointmentDay: appointment.appointmentDay
         });
         const data = await ap.save();
+        console.log(data)
         const appointmentList = await getAppointments(appointment.doctor)
         emitAppointments(io, appointment.room, appointmentList);
         // io.sockets.in(room).emit('appointmentList', daa);
@@ -100,7 +103,7 @@ io.on('connection', async function (socket) {
         for (let i = 0; i < appointments.length; i++) {
             const id = appointments[i]._id;
             delete appointments[i]._id;
-            const data = await appointmentController.update({ _id: id },{ $set: appointments[i] });
+            const data = await appointmentController.update({ _id: id }, { $set: appointments[i] });
             console.log(data)
             if (i == appointments.length - 1) {
                 const appointmentList = await getAppointments(appointments[0].doctor)
@@ -110,7 +113,21 @@ io.on('connection', async function (socket) {
     });
 });
 async function getAppointments(doctorId) {
-    let appointmentList = await appointmentController.find({ doctor: doctorId }).populate('user');
+    // const toDate = new Date().setHours(23, 59, 59)
+    // const fromDate = new Date().setHours(00, 00, 59)
+  
+    var start = new Date();
+    start.setHours(0,1);
+
+    var end = new Date();
+    end.setHours(23, 59);
+    const condition = {
+        doctor: doctorId,
+        appointmentDay: { $gte: start , $lt: end }
+    }
+    console.log(condition)
+    let appointmentList = await appointmentController.find(condition).populate('user');
+    console.log(appointmentList)
     return appointmentList;
 }
 function emitAppointments(io, room, appointmentList) {

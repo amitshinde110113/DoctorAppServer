@@ -19,6 +19,8 @@ const appointmentSchema = mongoose.Schema({
     fees: Number,
     isPaid: Boolean,
     isRefunded: Boolean,
-    timeSlot: String,        // FOR ADVANCE SCHEDULE
+    timeSlot: String, 
+    appointmentDay:Date,
+       // FOR ADVANCE SCHEDULE
 });
 module.exports = mongoose.model('Appointment', appointmentSchema);

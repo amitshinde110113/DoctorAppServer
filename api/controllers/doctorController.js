@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Doctor = require('../models/doctor_modal');
-
+const random = require('random')
+const mailController=require('./mailController');
 // Register new Doctor
 exports.signUp = (req, res, next) => {
     Doctor.find({ email: req.body.email }).exec().then(result => {
@@ -67,21 +68,41 @@ exports.getDoctorById = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     var data = req.body;
-    // delete data['_id'];
-    console.log(data)
-
-    // res.status(201).json(result);
     var id = req.params.id;
-    Doctor.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
-        .then((result) => {
-            console.log(result)
-            res.status(201).json(result);
-        })
-        .catch(err => {
-            res.status(500).json({ error: err });
-        });
-}
+    console.log('Changing passowrd.......................',data)
 
+    // delete data['_id'];
+    if (data.changePassword) {
+        console.log('Changing passowrd.......................',data)
+        Doctor.findById(id).then(doctor => {
+            console.log('Old Pasword matching',data.oldPassword)
+            console.log('Old Pasword matching',doctor.password)
+
+            if (data.oldPassword == doctor.password) {
+        console.log('Old Pasword match ....Changing passowrd.......................',data)
+
+                updateDoctor(id,data);
+            }else{
+        console.log('Old Pasword not matched ....Changing passowrd.......................',data)
+
+                res.status(402).json({ error: 'err' });
+            }
+        })
+    } else {
+        updateDoctor(id,data);
+    }
+    // res.status(201).json(result);
+    function updateDoctor(id, data) {
+        Doctor.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
+            .then((result) => {
+                console.log(result)
+                res.status(201).json(result);
+            })
+            .catch(err => {
+                res.status(404).json({ error: err });
+            });
+    }
+}
 
 // Remove doctor by Id
 
@@ -94,4 +115,24 @@ exports.remove = (req, res, next) => {
         .catch(err => {
             res.status(500).json({ error: err });
         });
+}
+
+exports.getOTP=(req,res,next)=>{
+    console.log('email--------------------------',);
+    const email=req.params.email;
+    const OTP=random.int(min = 1000, max = 9999);
+
+    Doctor.findOne({email:email}).exec()
+    .then((result)=>{
+       console.log('result--user found',result);
+       console.log('OTP--------',OTP);
+
+        mailController.sendResetMail(result.email,OTP)
+        res.status(200).json({'OTP':OTP,"_id":result._id,'profile':result.profile,'name':result.name})
+       
+    })
+    .catch( err=>{
+            res.status(404).json(err);
+        });
+
 }

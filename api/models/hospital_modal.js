@@ -9,11 +9,11 @@ const hospitalSchema = mongoose.Schema({
         }
     ],
     name: String,
-    address: String,
+    address: Object,
     contact: String,
     regstrationNo: String,
     fascilities: [],
-    geoLocation: String,
+    geoLocation: Object,
     profile:String,
     attachments:[],
     reviews: [

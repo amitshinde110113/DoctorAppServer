@@ -11,4 +11,6 @@ router.post('/login',doctorController.login);
 // router.get('/getAll',doctorController.getAll);
 router.patch('/update/:id',doctorController.update);
 router.patch('/remove/:id',doctorController.remove);
+router.get('/getOTP/:email',doctorController.getOTP)
+
 module.exports = router;
