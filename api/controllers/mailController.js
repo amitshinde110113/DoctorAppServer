@@ -21,7 +21,7 @@ exports.sendResetMail=(email,OTP)=>{
     requireTLS: true,
     auth: {
         user: 'amitshinde110113@gmail.com',
-        pass: '8975139966'
+        pass: 'ddeixfmetyhtchxn'
     },
     debug: true, // show debug output
     logger: true // log information in console
