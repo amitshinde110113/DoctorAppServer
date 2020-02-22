@@ -88,6 +88,8 @@ io.on('connection', async function (socket) {
             status: appointment.status,          // ACTIVE ARCHIVED DONE DELETED 
             type: appointment.type,            // ADVANCE CURRENT
             fees: appointment.fees,
+            age: appointment.age,
+            weight: appointment.weight,
             isPaid: appointment.isPaid,
             appointmentDay: appointment.appointmentDay
         });

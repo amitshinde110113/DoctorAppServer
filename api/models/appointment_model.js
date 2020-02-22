@@ -17,6 +17,8 @@ const appointmentSchema = mongoose.Schema({
     status: String,          // ACTIVE ARCHIVED DONE DELETED 
     type: String,            // ADVANCE CURRENT
     fees: Number,
+    age: Number,
+    weight: Number,
     isPaid: Boolean,
     isRefunded: Boolean,
     timeSlot: String, 
