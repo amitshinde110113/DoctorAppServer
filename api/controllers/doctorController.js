@@ -31,10 +31,8 @@ exports.signUp = (req, res, next) => {
 // Login using Email Password
 
 exports.login = (req, res, next) => {
-    // console.log(req.body)
     Doctor.findOne({ email: req.body.email }).exec()
         .then((result) => {
-            // console.log(result)
 
             if (result.password === req.body.password) {
                 res.status(201).json(result)
@@ -69,22 +67,14 @@ exports.getDoctorById = (req, res, next) => {
 exports.update = (req, res, next) => {
     var data = req.body;
     var id = req.params.id;
-    console.log('Changing passowrd.......................',data)
 
     // delete data['_id'];
     if (data.changePassword) {
-        console.log('Changing passowrd.......................',data)
         Doctor.findById(id).then(doctor => {
-            console.log('Old Pasword matching',data.oldPassword)
-            console.log('Old Pasword matching',doctor.password)
 
             if (data.oldPassword == doctor.password) {
-        console.log('Old Pasword match ....Changing passowrd.......................',data)
-
                 updateDoctor(id,data);
             }else{
-        console.log('Old Pasword not matched ....Changing passowrd.......................',data)
-
                 res.status(402).json({ error: 'err' });
             }
         })
@@ -95,7 +85,6 @@ exports.update = (req, res, next) => {
     function updateDoctor(id, data) {
         Doctor.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
             .then((result) => {
-                console.log(result)
                 res.status(201).json(result);
             })
             .catch(err => {
@@ -118,18 +107,13 @@ exports.remove = (req, res, next) => {
 }
 
 exports.getOTP=(req,res,next)=>{
-    console.log('email--------------------------',);
     const email=req.params.email;
     const OTP=random.int(min = 1000, max = 9999);
 
     Doctor.findOne({email:email}).exec()
     .then((result)=>{
-       console.log('result--user found',result);
-       console.log('OTP--------',OTP);
-
         mailController.sendResetMail(result.email,OTP)
         res.status(200).json({'OTP':OTP,"_id":result._id,'profile':result.profile,'name':result.name})
-       
     })
     .catch( err=>{
             res.status(404).json(err);

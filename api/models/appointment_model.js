@@ -10,19 +10,20 @@ const appointmentSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    name:String,            //Pattient name
-    contactNo:String,       //Patient contact
+    name: String,            //Pattient name
+    contactNo: String,       //Patient contact
     appointmentNo: Number,
     priority: String,       //HIGH LOW
-    status: String,          // ACTIVE ARCHIVED DONE DELETED 
+    status: String,  // ACTIVE ARCHIVED DONE DELETED 
+    reason: { deletedBy: String, reason: String },        
     type: String,            // ADVANCE CURRENT
     fees: Number,
     age: Number,
     weight: Number,
     isPaid: Boolean,
     isRefunded: Boolean,
-    timeSlot: String, 
-    appointmentDay:Date,
-       // FOR ADVANCE SCHEDULE
+    timeSlot: String,
+    appointmentDay: Date,
+    // FOR ADVANCE SCHEDULE
 });
 module.exports = mongoose.model('Appointment', appointmentSchema);

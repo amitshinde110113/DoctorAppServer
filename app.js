@@ -61,22 +61,16 @@ app.get('/', function (req, res) {
 
 io.on('connection', async function (socket) {
     socket.on('room', async function (room) {
-        // var room = room;
         socket.join(room);
-        // var daa = await appointmentController.create();
-        // const appointmentList = await getAppointments(room)
-        // emitAppointments(io, room, appointmentList);
-
-        // io.sockets.in(room).emit('appointmentList', daa);
+    
     });
+
     socket.on('getAppointments', async (doctor) => {
         const appointmentList = await getAppointments(doctor.room);
         io.sockets.in(doctor.room).emit('appointmentList', appointmentList);
     });
     socket.on('book', async (appointment) => {
         // var room = socket.request.headers.referer;
-        console.log('--------------------------------------------------', appointment)
-
 
         const ap = new appointmentController({
             _id: new mongoose.Types.ObjectId(),
@@ -101,12 +95,10 @@ io.on('connection', async function (socket) {
     });
     socket.on('updateAppointments', async (data) => {
         let appointments = data.appointments;
-        console.log(appointments)
         for (let i = 0; i < appointments.length; i++) {
             const id = appointments[i]._id;
             delete appointments[i]._id;
             const data = await appointmentController.update({ _id: id }, { $set: appointments[i] });
-            console.log(data)
             if (i == appointments.length - 1) {
                 const appointmentList = await getAppointments(appointments[0].doctor)
                 emitAppointments(io, appointments[0].doctor, appointmentList);
@@ -117,19 +109,20 @@ io.on('connection', async function (socket) {
 async function getAppointments(doctorId) {
     // const toDate = new Date().setHours(23, 59, 59)
     // const fromDate = new Date().setHours(00, 00, 59)
-  
+
     var start = new Date();
-    start.setHours(0,1);
+    start.setHours(0, 1);
 
     var end = new Date();
     end.setHours(23, 59);
     const condition = {
         doctor: doctorId,
-        appointmentDay: { $gte: start , $lt: end }
+        appointmentDay: { $gte: start, $lt: end },
+        status: { $ne: 'deleted' }
     }
-    console.log(condition)
+    // console.log(condition)
     let appointmentList = await appointmentController.find(condition).populate('user');
-    console.log(appointmentList)
+    // console.log(appointmentList)
     return appointmentList;
 }
 function emitAppointments(io, room, appointmentList) {
