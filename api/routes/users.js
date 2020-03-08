@@ -5,5 +5,5 @@ const userController=require('../controllers/userController');
 router.post('/signup',userController.signUp)
 router.post('/login',userController.login)
 router.patch('/update/:id',userController.update)
-// router.get('/getOTP/:email',userController.getOTP)
+router.get('/getOTP/:email',userController.getOTP)
 module.exports = router;

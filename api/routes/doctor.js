@@ -3,6 +3,8 @@ const router= express.Router();
 const doctorController=require('../controllers/doctorController');
 
 router.post('/create',doctorController.signUp);
+router.post('/byCondition',doctorController.listByCondition);
+
 router.get('/get',doctorController.getDoctors);
 router.get('/getDoctorById/:id',doctorController.getDoctorById);
 

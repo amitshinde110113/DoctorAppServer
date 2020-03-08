@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Doctor = require('../models/doctor_modal');
 const random = require('random')
-const mailController=require('./mailController');
+const mailController = require('./mailController');
 // Register new Doctor
 exports.signUp = (req, res, next) => {
     Doctor.find({ email: req.body.email }).exec().then(result => {
@@ -62,6 +62,14 @@ exports.getDoctorById = (req, res, next) => {
         res.status(404).json(err);
     })
 }
+
+exports.listByCondition = (req, res, next) => {
+    Doctor.find(req.body.condition).exec().then(doctors => {
+        res.status(201).json(doctors);
+    }).catch(err => {
+        res.status(404).json(err);
+    })
+}
 // Update Doctor by ID
 
 exports.update = (req, res, next) => {
@@ -73,13 +81,13 @@ exports.update = (req, res, next) => {
         Doctor.findById(id).then(doctor => {
 
             if (data.oldPassword == doctor.password) {
-                updateDoctor(id,data);
-            }else{
+                updateDoctor(id, data);
+            } else {
                 res.status(402).json({ error: 'err' });
             }
         })
     } else {
-        updateDoctor(id,data);
+        updateDoctor(id, data);
     }
     // res.status(201).json(result);
     function updateDoctor(id, data) {
@@ -106,16 +114,16 @@ exports.remove = (req, res, next) => {
         });
 }
 
-exports.getOTP=(req,res,next)=>{
-    const email=req.params.email;
-    const OTP=random.int(min = 1000, max = 9999);
+exports.getOTP = (req, res, next) => {
+    const email = req.params.email;
+    const OTP = random.int(min = 1000, max = 9999);
 
-    Doctor.findOne({email:email}).exec()
-    .then((result)=>{
-        mailController.sendResetMail(result.email,OTP)
-        res.status(200).json({'OTP':OTP,"_id":result._id,'profile':result.profile,'name':result.name})
-    })
-    .catch( err=>{
+    Doctor.findOne({ email: email }).exec()
+        .then((result) => {
+            mailController.sendResetMail(result.email, OTP)
+            res.status(200).json({ 'OTP': OTP, "_id": result._id, 'profile': result.profile, 'name': result.name })
+        })
+        .catch(err => {
             res.status(404).json(err);
         });
 

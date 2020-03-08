@@ -32,12 +32,18 @@ exports.sendResetMail=(email,OTP)=>{
        subject: 'Reset Password',
        text: 'One Time Password is '+OTP
    }
-   transport.sendMail(mailOption , (error, info)=>{
-       if(error){
-           console.log(error);
-       }else{
-           console.log('Email sent: ' + info.response);
-           res.status(200).json({message:'Email Sent'});
-       }
-   })
+ return  transport.sendMail(mailOption);
+//   , (error, info));
+//  =>{
+//        if(error){
+//            console.log(error); 
+//        return error;
+//             // res.status(500)
+//        }else{
+//            console.log('Email sent: ' + info.response);
+//            return info.response;      
+//            //  res.status(200).json({otp:OTP,email:email});
+
+//        }
+//    })
 } 
