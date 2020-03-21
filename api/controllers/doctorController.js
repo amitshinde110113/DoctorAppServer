@@ -64,7 +64,7 @@ exports.getDoctorById = (req, res, next) => {
 }
 
 exports.listByCondition = (req, res, next) => {
-    Doctor.find(req.body.condition).exec().then(doctors => {
+    Doctor.find(req.body).exec().then(doctors => {
         res.status(201).json(doctors);
     }).catch(err => {
         res.status(404).json(err);
