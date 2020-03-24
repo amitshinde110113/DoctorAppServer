@@ -33,8 +33,8 @@ const doctorSchema = mongoose.Schema({
                 ref: 'User'
             },
             review: String,
-            likes: {type:Number,default:0},
-            dislikes: {type:Number,default:0}
+            likes: { type: Number, default: 0 },
+            dislikes: { type: Number, default: 0 }
         }
     ],
     likes: 0,
@@ -44,6 +44,8 @@ const doctorSchema = mongoose.Schema({
         rateValue: 0,
         rateAverage: 0
     },
+    onlineSlots: { type: Number, default: 10 },
+    
     workingHours: [
         {
             day: { type: String },
@@ -52,16 +54,20 @@ const doctorSchema = mongoose.Schema({
                 default: true
             },
             breakStart: {
-                type: String
+                type: String,
+                default: '1.00 PM'
             },
             breakEnd: {
-                type: String
+                type: String,
+                default: '5.00 PM'
             },
             start: {
-                type: String
+                type: String,
+                default: '10.00 AM'
             },
             end: {
-                type: String
+                type: String,
+                default: '9.00 PM'
             }
         },
     ],
