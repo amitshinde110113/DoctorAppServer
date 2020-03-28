@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js && cd client && ng build --aot -prod",
+    "start": "cd client && ng build --aot -prod && cd .. && nodemon app.js ",
     "preinstall": "npm install -g angular-cli"
   },
   "author": "Amit Shinde",
