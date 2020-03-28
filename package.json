@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js && cd client && ng build --aot -prod",
-    "preinstall": "npm install -g angular-cli",
+    "preinstall": "npm install -g angular-cli"
   },
   "author": "Amit Shinde",
   "license": "ISC",
