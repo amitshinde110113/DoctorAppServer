@@ -10,7 +10,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
-    "heroku-postbuild": "ng build --prod"
   },
   "repository": {
     "type": "git",
@@ -79,7 +78,9 @@
     "ngx-toastr": "10.0.4",
     "rxjs": "6.5.2",
     "tslib": "1.10.0",
-    "zone.js": "0.10.2"
+    "zone.js": "0.10.2",
+    "typescript": "3.7.5"
+
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.900.5",
@@ -97,7 +98,6 @@
     "karma-jasmine-html-reporter": "1.5.2",
     "protractor": "5.4.3",
     "ts-node": "8.6.2",
-    "tslint": "6.0.0",
-    "typescript": "3.7.5"
+    "tslint": "6.0.0"
   }
 }
