@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/app/views');
 app.use(express.static(__dirname + '/public'));
-app.use('/', express.static(__dirname + '/client/dist')); // this line renders the angular app from node js
+// app.use('/', express.static(__dirname + '/client/dist')); // this line renders the angular app from node js
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -52,6 +52,12 @@ app.use((req, res, next) => {
         return res.status(200).json({});
     }
     next();
+});
+app.use(express.static(__dirname + '/client/dist'));
+
+app.get('/', function(req,res) {
+    
+res.sendFile(path.join(__dirname+'/client/dist/index.html'));
 });
 
 

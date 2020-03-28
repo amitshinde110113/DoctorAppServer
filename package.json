@@ -5,9 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
+    "start": "nodemon app.js && cd client && ng build --aot -prod",
     "preinstall": "npm install -g angular-cli",
-    "heroku-postbuild": "cd client && ng build --prod -aot"
   },
   "author": "Amit Shinde",
   "license": "ISC",
