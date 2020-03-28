@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js ",
-    "preinstall": "npm install -g angular-cli && cd client && ng build --prod && cd ..",
-    "heroku-postbuild": ""
+    "start": "nodemon app.js"
   },
   "author": "Amit Shinde",
   "license": "ISC",
@@ -23,9 +21,5 @@
     "nodemon": "^1.19.1",
     "random": "^2.1.1",
     "socket.io": "^2.3.0"
-  },
-  "engines": {
-    "node": "12.16.1",
-    "npm":"6.13.4"
   }
 }

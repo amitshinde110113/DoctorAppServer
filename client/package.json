@@ -1,5 +1,5 @@
 {
-  "name": "doctor",
+  "name": "black-dashboard-angular",
   "version": "1.1.0",
   "description": "Black Dasboard Angular, a Creative Tim Desgin. Coded by Creative Tim",
   "scripts": {
@@ -9,8 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
-    "postinstall": "npm i && ng build --aot -prod"
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
   },
   "repository": {
     "type": "git",
@@ -70,8 +69,6 @@
     "@angular/localize": "^9.0.5",
     "@angular/platform-browser": "9.0.5",
     "@angular/platform-browser-dynamic": "9.0.5",
-    "@angular/cli": "9.0.5",
-    "@angular/compiler-cli": "9.0.5",
     "@angular/router": "9.0.5",
     "@ng-bootstrap/ng-bootstrap": "6.0.0",
     "chart.js": "2.8.0",
@@ -79,11 +76,12 @@
     "ngx-toastr": "10.0.4",
     "rxjs": "6.5.2",
     "tslib": "1.10.0",
-    "zone.js": "0.10.2",
-    "typescript": "3.7.5"
+    "zone.js": "0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.900.5",
+    "@angular/cli": "9.0.5",
+    "@angular/compiler-cli": "9.0.5",
     "@angular/language-service": "9.0.5",
     "@types/node": "13.9.0",
     "@types/jasmine": "3.5.8",
@@ -98,10 +96,7 @@
     "karma-jasmine-html-reporter": "1.5.2",
     "protractor": "5.4.3",
     "ts-node": "8.6.2",
-    "tslint": "6.0.0"
-  },
-  "engines": {
-    "node": "12.16.1",
-    "npm":"6.13.4"
+    "tslint": "6.0.0",
+    "typescript": "3.7.5"
   }
 }

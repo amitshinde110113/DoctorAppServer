@@ -6,8 +6,6 @@ const bodyParser = require('body-parser');
 const doctorRoute = require('./api/routes/doctor');
 const userRoute = require('./api/routes/users');
 const hospitalRoute = require('./api/routes/hospital');
-var path = require('path');
-
 
 const port = process.env.PORT || 4000;
 
@@ -31,16 +29,9 @@ mongoose.connect('mongodb+srv://amit_shinde:amit_shinde@cluster0-ndonf.mongodb.n
         useNewUrlParser: true,
         // useFindAndModify: false
     });
-
-
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json());
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/app/views');
-app.use(express.static(__dirname + '/public'));
-// app.use('/', express.static(__dirname + '/client/dist')); // this line renders the angular app from node js
-
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
@@ -53,12 +44,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-app.use(express.static(__dirname + '/client/dist'));
-
-app.get('/', function(req,res) {
-    
-res.sendFile(path.join(__dirname+'/client/dist/index.html'));
-});
 
 
 app.use('/doctors', doctorRoute)
@@ -66,19 +51,13 @@ app.use('/users', userRoute)
 app.use('/hospitals', hospitalRoute)
 
 
-// app.get('/index', function (req, res) {
-//     console.log(__dirname+'/client/dist/index.html' )
-//     // res.sendFile(__dirname + '/index.html');
-//     res.sendFile(__dirname + '/client/dist/index.html');
+app.get('/index', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+app.get('/', function (req, res) {
 
-// });
-// app.get('/', function (req, res) {
-//     console.log(__dirname )
-
-//         res.sendFile(__dirname + '/client/dist/index.html');
-  
-//     console.log('Server is listning on port', port)
-// });
+    console.log('Server is listning on port', port)
+});
 
 io.on('connection', async function (socket) {
     socket.on('room', async function (room) {
