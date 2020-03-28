@@ -15,7 +15,19 @@ const userSchema = mongoose.Schema({
     local: { type: String },
     pin: { type: String },
     contactNumber: { type: String },
-   
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Doctor'
+        }
+    ],
+    dislikes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Doctor'
+        }
+    ]
+
 });
 
 
