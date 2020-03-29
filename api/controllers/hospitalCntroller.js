@@ -37,7 +37,7 @@ exports.get = (req, res, next) => {
 
     Hospital.find({ owner: id }).populate('doctors')
         .then((hospitals) => {
-            console.log(hospitals);
+            // console.log(hospitals);
             res.status(201).json(hospitals)
         })
         .catch(err => {
@@ -81,7 +81,7 @@ exports.getAll = (req, res, next) => {
 exports.update = (req, res, next) => {
     var data = req.body;
     delete data['_id'];
-    console.log(data);
+    // console.log(data);
     var id = req.params.id;
     Hospital.findByIdAndUpdate(id, { $set: data }, { new: true }).exec()
         .then((result) => {

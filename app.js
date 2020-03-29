@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const doctorRoute = require('./api/routes/doctor');
 const userRoute = require('./api/routes/users');
 const hospitalRoute = require('./api/routes/hospital');
-
+const appointmentRoute=require('./api/routes/appointment')
 const port = process.env.PORT || 4000;
 
 const appointmentController = require('./api/models/appointment_model');
@@ -49,6 +49,7 @@ app.use((req, res, next) => {
 app.use('/doctors', doctorRoute)
 app.use('/users', userRoute)
 app.use('/hospitals', hospitalRoute)
+app.use('/appointments',appointmentRoute)
 
 
 // app.get('/index', function (req, res) {
@@ -60,15 +61,15 @@ app.use('/hospitals', hospitalRoute)
 // });
 app.use(express.static(__dirname + '/client/dist'));
 
-app.get('/', function(req,res) {
-    
-res.sendFile(path.join(__dirname+'/client/dist/index.html'));
+app.get('/', function (req, res) {
+
+    res.sendFile(path.join(__dirname + '/client/dist/index.html'));
 });
 
 io.on('connection', async function (socket) {
     socket.on('room', async function (room) {
         socket.join(room);
-    
+
     });
 
     socket.on('getAppointments', async (doctor) => {
@@ -94,7 +95,7 @@ io.on('connection', async function (socket) {
             appointmentDay: appointment.appointmentDay
         });
         const data = await ap.save();
-        console.log(data)
+        // console.log(data)
         const appointmentList = await getAppointments(appointment.doctor)
         emitAppointments(io, appointment.room, appointmentList);
         // io.sockets.in(room).emit('appointmentList', daa);
@@ -153,7 +154,7 @@ app.use((req, res, next) => {
     next(error);
 })
 app.use((error, req, res, next) => {
-    console.log(error)
+    // console.log(error)
     res.status(error.err || 500);
     res.json({ error: { message: error.message } });
 

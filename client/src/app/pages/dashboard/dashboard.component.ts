@@ -1,118 +1,108 @@
 import { Component, OnInit } from "@angular/core";
 import Chart from 'chart.js';
-
+import { UserService } from 'src/app/shared/user.service';
+import { DoctorService } from 'src/app/shared/doctor.service';
+import { AppointmentService } from 'src/app/shared/appointment.service';
+import { forkJoin, zip, combineLatest, Subject, Observable } from 'rxjs';
 @Component({
   selector: "app-dashboard",
   templateUrl: "dashboard.component.html"
 })
 export class DashboardComponent implements OnInit {
-  public canvas : any;
+  appointmentStat: any = {};
+  public canvas: any;
   public ctx;
   public datasets: any;
-  public data: any;
+  public data: any = [];
   public myChartData;
   public clicked: boolean = true;
   public clicked1: boolean = false;
   public clicked2: boolean = false;
+  doctors: any = [];
+  users: any = [];
+  appointments: any = [];
 
-  constructor() {}
+  constructor(
+    private userService: UserService,
+    private doctorService: DoctorService,
+    private appointmentService: AppointmentService
+  ) { }
 
   ngOnInit() {
-    var gradientChartOptionsConfigurationWithTooltipBlue: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
+    // this.getDoctors();
+    // this.getUsers();
+    // this.getAppointments();
+    this.getDashData(this.getDoctors(), this.getUsers(), this.getAppointments())
 
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#2380f7"
-          }
-        }],
+  }
+  getDashData(doctors$, users$, appointments$) {
+    zip(doctors$, users$, appointments$).subscribe(([doctors, users, appointments]) => {
+      this.doctors = doctors,
+        this.users = users,
+        this.appointments = appointments
+      // console.log(this.doctors)
+      // console.log(this.users)
+      // console.log(this.appointments)
+      this.groupAppointmentsByMonths()
+    })
+  }
+  groupAppointmentsByMonths() {
+    const data = [];
+    this.appointments.forEach(appointment => {
+      if (appointment.appointmentDay) {
+        const month = new Date(appointment.appointmentDay).getMonth()
+        // console.log(month)
+        const year = new Date(appointment.appointmentDay).getFullYear().toString()
+        data.push({
+          year: year,
+          month: month,
+        })
 
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#2380f7"
-          }
-        }]
       }
-    };
+    });
+    const years = Array.from(new Set(data.map(data => data.year)))
+    const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    years.forEach(year => {
+      // console.log('d', year)
+      this.appointmentStat[year] = {}
+      months.forEach(month => {
+        // console.log('d', month)
 
-    var gradientChartOptionsConfigurationWithTooltipPurple: any = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9a9a9a"
+        this.appointmentStat[year][month] = null
+        data.forEach(appointment => {
+          if (appointment.year == year && appointment.month == month) {
+            this.appointmentStat[year][month] == '' ? this.appointmentStat[year][month] = 1 : this.appointmentStat[year][month] += 1
           }
-        }],
+        })
+      })
+    })
+    // this.appointmentStat= Array.from(new Set(this.appointmentStat))
+    // console.log(data)
+    // console.log(years)
+    // console.log(months)
+    // console.log('sssssssssssssss', this.appointmentStat)
 
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(225,78,202,0.1)',
-            zeroLineColor: "transparent",
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }]
-      }
-    };
+    this.showPerformanceChart();
+
+
+  }
+  getDoctors(): Observable<any> {
+    return this.doctorService.getDoctors()
+  }
+  getUsers(): Observable<any> {
+    return this.userService.getUsers()
+  }
+  getAppointments(): Observable<any> {
+    return this.appointmentService.getAppointments()
+  }
+  public updateOptions() {
+    this.myChartData.data.datasets[0].data = this.data;
+    this.myChartData.update();
+  }
+  showPerformanceChart() {
+
+   
+   
 
     var gradientChartOptionsConfigurationWithTooltipRed: any = {
       maintainAspectRatio: false,
@@ -307,90 +297,96 @@ export class DashboardComponent implements OnInit {
       }
     };
 
-    this.canvas = document.getElementById("chartLineRed");
-    this.ctx = this.canvas.getContext("2d");
+    // this.canvas = document.getElementById("chartLineRed");
+    // this.ctx = this.canvas.getContext("2d");
 
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
+    // var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
+    // gradientStroke.addColorStop(1, 'rgba(233,32,16,0.2)');
+    // gradientStroke.addColorStop(0.4, 'rgba(233,32,16,0.0)');
+    // gradientStroke.addColorStop(0, 'rgba(233,32,16,0)'); //red colors
 
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-      datasets: [{
-        label: "Data",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#ec250d',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#ec250d',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#ec250d',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [80, 100, 70, 80, 120, 80],
-      }]
-    };
+    // var data = {
+    //   labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+    //   datasets: [{
+    //     label: "Data",
+    //     fill: true,
+    //     backgroundColor: gradientStroke,
+    //     borderColor: '#ec250d',
+    //     borderWidth: 2,
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     pointBackgroundColor: '#ec250d',
+    //     pointBorderColor: 'rgba(255,255,255,0)',
+    //     pointHoverBackgroundColor: '#ec250d',
+    //     pointBorderWidth: 20,
+    //     pointHoverRadius: 4,
+    //     pointHoverBorderWidth: 15,
+    //     pointRadius: 4,
+    //     data: [80, 100, 70, 80, 120, 80],
+    //   }]
+    // };
 
-    var myChart = new Chart(this.ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipRed
-    });
-
-
-    this.canvas = document.getElementById("chartLineGreen");
-    this.ctx = this.canvas.getContext("2d");
+    // var myChart = new Chart(this.ctx, {
+    //   type: 'line',
+    //   data: data,
+    //   options: gradientChartOptionsConfigurationWithTooltipRed
+    // });
 
 
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
+    // this.canvas = document.getElementById("chartLineGreen");
+    // this.ctx = this.canvas.getContext("2d");
 
-    gradientStroke.addColorStop(1, 'rgba(66,134,121,0.15)');
-    gradientStroke.addColorStop(0.4, 'rgba(66,134,121,0.0)'); //green colors
-    gradientStroke.addColorStop(0, 'rgba(66,134,121,0)'); //green colors
 
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
-      datasets: [{
-        label: "My First dataset",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#00d6b4',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#00d6b4',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#00d6b4',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [90, 27, 60, 12, 80],
-      }]
-    };
+    // var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
 
-    var myChart = new Chart(this.ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipGreen
+    // gradientStroke.addColorStop(1, 'rgba(66,134,121,0.15)');
+    // gradientStroke.addColorStop(0.4, 'rgba(66,134,121,0.0)'); //green colors
+    // gradientStroke.addColorStop(0, 'rgba(66,134,121,0)'); //green colors
 
-    });
+    // var data = {
+    //   labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
+    //   datasets: [{
+    //     label: "My First dataset",
+    //     fill: true,
+    //     backgroundColor: gradientStroke,
+    //     borderColor: '#00d6b4',
+    //     borderWidth: 2,
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     pointBackgroundColor: '#00d6b4',
+    //     pointBorderColor: 'rgba(255,255,255,0)',
+    //     pointHoverBackgroundColor: '#00d6b4',
+    //     pointBorderWidth: 20,
+    //     pointHoverRadius: 4,
+    //     pointHoverBorderWidth: 15,
+    //     pointRadius: 4,
+    //     data: [90, 27, 60, 12, 80],
+    //   }]
+    // };
+
+    // var myChart = new Chart(this.ctx, {
+    //   type: 'line',
+    //   data: data,
+    //   options: gradientChartOptionsConfigurationWithTooltipGreen
+
+    // });
 
 
 
     var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     this.datasets = [
       [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-      [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
+      [80, 120, 105, 110, 95, 105, 90, 100, 80],
       [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
     ];
-    this.data = this.datasets[0];
+
+    // console.log(this.appointmentStat[new Date().getFullYear().toString()])
+    for (let [key, value] of Object.entries(this.appointmentStat[new Date().getFullYear().toString()])) {
+      // console.log(`${key}: ${value}`);
+      this.data.push(value)
+    }
+    // this.data = this.appointmentStat[new Date().getFullYear().toString()]
 
 
 
@@ -408,7 +404,7 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: chart_labels,
         datasets: [{
-          label: "My First dataset",
+          label: "Appointments Booked",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: '#ec250d',
@@ -430,41 +426,37 @@ export class DashboardComponent implements OnInit {
     this.myChartData = new Chart(this.ctx, config);
 
 
-    this.canvas = document.getElementById("CountryChart");
-    this.ctx  = this.canvas.getContext("2d");
-    var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
+    // this.canvas = document.getElementById("CountryChart");
+    // this.ctx = this.canvas.getContext("2d");
+    // var gradientStroke = this.ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
+    // gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
+    // gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
+    // gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
 
 
-    var myChart = new Chart(this.ctx, {
-      type: 'bar',
-      responsive: true,
-      legend: {
-        display: false
-      },
-      data: {
-        labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
-        datasets: [{
-          label: "Countries",
-          fill: true,
-          backgroundColor: gradientStroke,
-          hoverBackgroundColor: gradientStroke,
-          borderColor: '#1f8ef1',
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
-        }]
-      },
-      options: gradientBarChartConfiguration
-    });
+    // var myChart = new Chart(this.ctx, {
+    //   type: 'bar',
+    //   responsive: true,
+    //   legend: {
+    //     display: false
+    //   },
+    //   data: {
+    //     labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+    //     datasets: [{
+    //       label: "Countries",
+    //       fill: true,
+    //       backgroundColor: gradientStroke,
+    //       hoverBackgroundColor: gradientStroke,
+    //       borderColor: '#1f8ef1',
+    //       borderWidth: 2,
+    //       borderDash: [],
+    //       borderDashOffset: 0.0,
+    //       data: [53, 20, 10, 80, 100, 45],
+    //     }]
+    //   },
+    //   options: gradientBarChartConfiguration
+    // });
 
-  }
-  public updateOptions() {
-    this.myChartData.data.datasets[0].data = this.data;
-    this.myChartData.update();
   }
 }

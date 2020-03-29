@@ -48,7 +48,7 @@
             <i class=" tim-icons icon-sound-wave"> </i>
             <p class=" d-lg-none">Notifications</p>
           </a>
-          <ul class=" dropdown-menu-right dropdown-navbar" ngbDropdownMenu>
+          <!-- <ul class=" dropdown-menu-right dropdown-navbar" ngbDropdownMenu>
             <li class=" nav-link">
               <a class=" nav-item" href="javascript:void(0)" ngbDropdownItem>
                 Mike John responded to your email
@@ -74,7 +74,7 @@
                 Another one
               </a>
             </li>
-          </ul>
+          </ul> -->
         </li>
         <li class=" nav-item" ngbDropdown>
           <a
@@ -87,7 +87,7 @@
               <img alt="Profile Photo" src="assets/img/anime3.png" />
             </div>
             <b class=" caret d-none d-lg-block d-xl-block"> </b>
-            <p class=" d-lg-none">Log out</p>
+            <p class=" d-lg-none" (click)="logout()">Log out</p>
           </a>
           <ul class=" dropdown-navbar" ngbDropdownMenu>
             <li class=" nav-link">
@@ -102,7 +102,7 @@
             </li>
             <li class=" dropdown-divider"></li>
             <li class=" nav-link">
-              <a class=" nav-item" href="javascript:void(0)" ngbDropdownItem>
+              <a class=" nav-item" (click)="logout()" ngbDropdownItem>
                 Log out
               </a>
             </li>

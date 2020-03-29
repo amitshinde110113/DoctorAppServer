@@ -66,11 +66,11 @@ exports.signUp=(req,res,next)=>{
 
 
 exports.update=(req,res,next)=>{
-       console.log(req.body);
+    //    console.log(req.body);
       
         User.findOneAndUpdate(req.body._id ,req.body,{new: true}).exec()
     .then((result)=>{
-        console.log(result)
+        // console.log(result)
             res.status(201).json(result)
     })
     .catch( err=>{
@@ -84,13 +84,13 @@ exports.update=(req,res,next)=>{
 
 
 exports.getOTP=(req,res,next)=>{
-    console.log('email--------------------------',);
+    // console.log('email--------------------------',);
     const email=req.params.email;
     const OTP=random.int(min = 1000, max = 9999);
 
     User.findOne({email:email}).exec()
     .then((result)=>{
-       console.log(result);
+    //    console.log(result);
        
         mailController.sendResetMail(result.email,OTP)
         res.status(200).json({'OTP':OTP,"_id":result._id})

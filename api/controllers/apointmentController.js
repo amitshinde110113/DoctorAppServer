@@ -33,7 +33,7 @@ exports.create = (req, res, next) => {
 // Get Appointments of specific Doctor
 
 exports.get = (req, res, next) => {
-    AppointModal.find(req.body.condition).exec()
+    AppointModal.find().exec()
         .then((result) => {
             res.status(201).json(result)
         })

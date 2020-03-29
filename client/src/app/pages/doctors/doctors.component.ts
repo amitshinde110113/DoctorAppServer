@@ -17,7 +17,7 @@ defaultAvatar="assets/img/default-avatar.png";
   getDoctors() {
     this.doctorService.getDoctors().subscribe(res => {
       this.doctors = res;
-      console.log(res)
+      // console.log(res)
     })
   }
 }

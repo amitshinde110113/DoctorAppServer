@@ -14,9 +14,14 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AppRoutingModule } from "./app-routing.module";
 import { ComponentsModule } from "./components/components.module";
 import { DoctorService } from './shared/doctor.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './guards/auth-guard.service';
+import { UserService } from './shared/user.service';
 
 @NgModule({
   imports: [
+    BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
@@ -29,7 +34,7 @@ import { DoctorService } from './shared/doctor.service';
     ToastrModule.forRoot()
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
-  providers: [DoctorService],
+  providers: [DoctorService,AuthGuard,UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
