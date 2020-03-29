@@ -51,12 +51,18 @@ app.use('/users', userRoute)
 app.use('/hospitals', hospitalRoute)
 
 
-app.get('/index', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-app.get('/', function (req, res) {
+// app.get('/index', function (req, res) {
+//     res.sendFile(__dirname + '/index.html');
+// });
+// app.get('/', function (req, res) {
 
-    console.log('Server is listning on port', port)
+//     console.log('Server is listning on port', port)
+// });
+app.use(express.static(__dirname + '/client/dist'));
+
+app.get('/', function(req,res) {
+    
+res.sendFile(path.join(__dirname+'/client/dist/index.html'));
 });
 
 io.on('connection', async function (socket) {
