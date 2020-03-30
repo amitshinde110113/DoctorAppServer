@@ -23,6 +23,7 @@ const doctorSchema = mongoose.Schema({
     email: String,
     regstrationNo: String,
     specilizations: [],
+    education: [],
     consultationCharge: String,
     experience: { type: String, default: '1' },
 
@@ -44,8 +45,13 @@ const doctorSchema = mongoose.Schema({
         rateValue: 0,
         rateAverage: 0
     },
-    onlineSlots: { type: Number, default: 10 },
-    
+    onlineBooking: {
+        allowOnlineBooking: { type: Boolean, default: true },
+        morningSlots:{type:Number,default:10},
+        eveningSlots:{type:Number,default:10},
+
+    },
+
     workingHours: [
         {
             day: { type: String },
