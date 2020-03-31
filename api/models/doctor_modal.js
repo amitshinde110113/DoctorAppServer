@@ -47,11 +47,12 @@ const doctorSchema = mongoose.Schema({
     },
     onlineBooking: {
         allowOnlineBooking: { type: Boolean, default: true },
-        morningSlots:{type:Number,default:10},
-        eveningSlots:{type:Number,default:10},
+        morningSlots: { type: Number, default: 10 },
+        eveningSlots: { type: Number, default: 10 },
 
     },
-
+    seviceType: { type: String, default: 'FREE' },
+    profileStatus: { type: String, default: 'INCOMPLETE' },
     workingHours: [
         {
             day: { type: String },
@@ -77,6 +78,7 @@ const doctorSchema = mongoose.Schema({
             }
         },
     ],
+    createdAt: { type: Date, default: new Date() }
 
 });
 module.exports = mongoose.model('Doctor', doctorSchema);
