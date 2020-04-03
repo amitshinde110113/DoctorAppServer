@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+var timestamps = require('mongoose-timestamp');
 
 const doctorSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -78,7 +78,7 @@ const doctorSchema = mongoose.Schema({
             }
         },
     ],
-    createdAt: { type: Date, default: new Date() }
 
 });
+doctorSchema.plugin(timestamps);
 module.exports = mongoose.model('Doctor', doctorSchema);

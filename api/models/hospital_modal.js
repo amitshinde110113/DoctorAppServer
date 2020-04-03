@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamp');
 
 const hospitalSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -13,9 +14,12 @@ const hospitalSchema = mongoose.Schema({
     contact: String,
     regstrationNo: String,
     fascilities: [],
-    geoLocation: Object,
-    profile:String,
-    attachments:[],
+    geoLocation: {
+        type: { type: String },
+        coordinates: [Number],
+    },
+    profile: String,
+    attachments: [],
     reviews: [
         {
             review: String,
@@ -24,11 +28,12 @@ const hospitalSchema = mongoose.Schema({
         }
     ],
     openHours: { type: String },
-    status:String,
+    status: String,
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Doctor'
     }
-    
+
 });
+hospitalSchema.plugin(timestamps);
 module.exports = mongoose.model('Hospital', hospitalSchema);

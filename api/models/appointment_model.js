@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamp');
+
 
 const appointmentSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -26,4 +28,6 @@ const appointmentSchema = mongoose.Schema({
     appointmentDay: Date,
     // FOR ADVANCE SCHEDULE
 });
+appointmentSchema.plugin(timestamps);
+
 module.exports = mongoose.model('Appointment', appointmentSchema);

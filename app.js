@@ -95,7 +95,7 @@ io.on('connection', async function (socket) {
             appointmentDay: appointment.appointmentDay
         });
         const data = await ap.save();
-        // console.log(data)
+        console.log(data)
         const appointmentList = await getAppointments(appointment.doctor)
         emitAppointments(io, appointment.room, appointmentList);
         // io.sockets.in(room).emit('appointmentList', daa);
